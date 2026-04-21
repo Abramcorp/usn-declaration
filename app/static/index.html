@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Налоговая декларация ИП на УСН 6% — мастер</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+            line-height: 1.5;
+        }
+        header {
+            background: #1e40af;
+            color: #fff;
+            padding: 18px 32px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        header h1 { font-size: 20px; font-weight: 600; }
+        .wrap { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+        /* Stepper */
+        .stepper { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+        .chip {
+            flex: 1; min-width: 180px;
+            background: #fff; border: 2px solid #e5e7eb;
+            border-radius: 10px; padding: 12px 16px;
+            font-size: 14px; color: #6b7280;
+            transition: all .2s;
+        }
+        .chip .num {
+            display: inline-block; width: 22px; height: 22px; line-height: 22px;
+            text-align: center; background: #e5e7eb; color: #6b7280;
+            border-radius: 50%; font-weight: 600; margin-right: 8px; font-size: 12px;
+        }
+        .chip.active { border-color: #1e40af; color: #1e40af; background: #eff6ff; }
+        .chip.active .num { background: #1e40af; color: #fff; }
+        .chip.done { border-color: #059669; color: #059669; background: #ecfdf5; }
+        .chip.done .num { background: #059669; color: #fff; }
+        .chip.done .num::before { content: "✓"; }
+        .chip.done .num span { display: none; }
+
+        /* Cards */
+        .card {
+            background: #fff; border-radius: 12px; padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 16px;
+        }
+        .card h2 { font-size: 18px; margin-bottom: 16px; color: #111827; }
+        .card h3 { font-size: 15px; margin: 16px 0 10px; color: #374151; }
+        .hint { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+
+        /* Forms */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .field label {
+            display: block; font-size: 13px; color: #374151;
+            margin-bottom: 4px; font-weight: 500;
+        }
+        .field input, .field select {
+            width: 100%; padding: 9px 12px; border: 1px solid #d1d5db;
+            border-radius: 8px; font-size: 14px; outline: none;
+            background: #fff;
+        }
+        .field input:focus, .field select:focus { border-color: #1e40af; }
+
+        /* Dropzones */
+        .dz {
+            border: 2px dashed #cbd5e1; border-radius: 10px;
+            padding: 24px; text-align: center; cursor: pointer;
+            transition: all .15s; background: #f9fafb;
+        }
+        .dz:hover { border-color: #1e40af; background: #eff6ff; }
+        .dz.has-file { border-color: #059669; background: #ecfdf5; border-style: solid; }
+        .dz-label { font-weight: 500; color: #374151; }
+        .dz-sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .dz input[type=file] { display: none; }
+
+        /* Progress toolbar */
+        .progress {
+            margin-top: 10px; display: none;
+            background: #f3f4f6; border-radius: 6px; padding: 8px 12px;
+            font-size: 12px; color: #374151;
+        }
+        .progress.visible { display: block; }
+        .progress .bar {
+            height: 6px; background: #e5e7eb; border-radius: 3px;
+            overflow: hidden; margin: 6px 0;
+        }
+        .progress .fill {
+            height: 100%; background: #1e40af; width: 0%;
+            transition: width .15s;
+        }
+        .progress .info { display: flex; justify-content: space-between; font-size: 11px; }
+
+        /* Buttons */
+        .btn-row { display: flex; justify-content: space-between; margin-top: 20px; gap: 12px; }
+        button, .btn {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 500; cursor: pointer;
+            transition: all .15s;
+        }
+        .btn-primary { background: #1e40af; color: #fff; }
+        .btn-primary:hover { background: #1e3a8a; }
+        .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
+        .btn-ghost { background: #f3f4f6; color: #374151; }
+        .btn-ghost:hover { background: #e5e7eb; }
+        .btn-green { background: #059669; color: #fff; }
+        .btn-green:hover { background: #047857; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 8px 12px; text-align: right; border-bottom: 1px solid #e5e7eb; }
+        th:first-child, td:first-child { text-align: left; }
+        thead th {
+            background: #f3f4f6; font-size: 12px; text-transform: uppercase;
+            color: #6b7280; letter-spacing: 0.02em;
+        }
+        tfoot td { font-weight: 600; background: #fafafa; }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 16px; border-radius: 8px; font-size: 13px;
+            margin: 12px 0;
+        }
+        .alert-info { background: #eff6ff; color: #1e40af; border-left: 3px solid #1e40af; }
+        .alert-warn { background: #fffbeb; color: #92400e; border-left: 3px solid #f59e0b; }
+        .alert-ok { background: #ecfdf5; color: #065f46; border-left: 3px solid #059669; }
+        .alert-err { background: #fef2f2; color: #991b1b; border-left: 3px solid #dc2626; }
+
+        /* Radios */
+        .radio-row { display: flex; gap: 20px; margin: 8px 0; }
+        .radio-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+        /* Hidden */
+        .hidden { display: none !important; }
+
+        /* Download buttons row */
+        .downloads {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;
+        }
+        .downloads a {
+            padding: 10px 20px; border-radius: 8px; text-decoration: none;
+            font-weight: 500; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .dl-pdf { background: #dc2626; color: #fff; }
+        .dl-xls { background: #059669; color: #fff; }
+
+        .small { font-size: 12px; color: #6b7280; }
+
+        /* Upload result toolbar */
+        .upload-result {
+            margin-top: 12px; border-radius: 10px; padding: 16px 18px;
+            display: none; animation: fadeIn .3s;
+        }
+        .upload-result.visible { display: block; }
+        .upload-result.ok { background: #ecfdf5; border: 1px solid #a7f3d0; }
+        .upload-result.warn { background: #fffbeb; border: 1px solid #fcd34d; }
+        .upload-result .ur-title {
+            font-weight: 600; font-size: 14px; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .upload-result .ur-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+        }
+        .upload-result .ur-stat {
+            background: rgba(255,255,255,0.7); border-radius: 8px;
+            padding: 10px 12px; text-align: center;
+        }
+        .upload-result .ur-stat .val {
+            font-size: 18px; font-weight: 700; color: #111827;
+        }
+        .upload-result .ur-stat .lbl {
+            font-size: 11px; color: #6b7280; margin-top: 2px;
+        }
+        .upload-result .ur-warn {
+            font-size: 12px; color: #92400e; margin-top: 8px;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+
+        /* Contribution blocks */
+        .contrib-block {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+        .contrib-block .field { margin: 0; }
+        .contrib-block .field input { background: #fff; font-weight: 500; }
+        .contrib-why {
+            font-size: 12.5px;
+            color: #4b5563;
+            line-height: 1.55;
+            padding-top: 22px;
+        }
+        .contrib-why strong { color: #111827; }
+        .contrib-why .calc {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 11.5px;
+        }
+        @media (max-width: 700px) {
+            .contrib-block { grid-template-columns: 1fr; }
+            .contrib-why { padding-top: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Налоговая декларация ИП УСН 6% — мастер в 4 шага</h1></header>
+
+    <div class="wrap">
+        <!-- Stepper -->
+        <div class="stepper">
+            <div class="chip active" data-step="1"><span class="num"><span>1</span></span>Загрузка файлов</div>
+            <div class="chip" data-step="2"><span class="num"><span>2</span></span>Выручка по кварталам</div>
+            <div class="chip" data-step="3"><span class="num"><span>3</span></span>Персонал и взносы</div>
+            <div class="chip" data-step="4"><span class="num"><span>4</span></span>Декларация</div>
+        </div>
+
+        <!-- ───────── STEP 1 ───────── -->
+        <div id="step1" class="step">
+            <div class="card">
+                <h2>Шаг 1 · Загрузка выписки</h2>
+                <p class="hint">
+                    ИНН и ФИО ИП <strong>подтянутся автоматически</strong> из банковской выписки.
+                    Просто выберите год и загрузите файл.
+                </p>
+
+                <div class="field" style="max-width:280px">
+                    <label>Год декларации *</label>
+                    <select id="year">
+                        <option>2022</option>
+                        <option>2023</option>
+                        <option>2024</option>
+                        <option selected>2025</option>
+                        <option>2026</option>
+                    </select>
+                </div>
+
+                <h3 style="margin-top:20px">1. Банковская выписка *</h3>
+                <label class="dz" id="dzBank">
+                    <div class="dz-label" id="dzBankLabel">📄 Перетащите или нажмите — .txt (формат 1С)</div>
+                    <div class="dz-sub">Из выписки извлекутся ИНН, ФИО, период и счёт</div>
+                    <input type="file" id="bankFile" accept=".txt">
+                </label>
+                <div class="progress" id="bankProgress">
+                    <div class="info"><span id="bankPct">0 %</span><span id="bankEta">—</span></div>
+                    <div class="bar"><div class="fill" id="bankFill"></div></div>
+                    <div class="small" id="bankInfo"></div>
+                </div>
+
+                <!-- Тулбар результатов загрузки банка -->
+                <div id="bankResult" class="upload-result ok">
+                    <div class="ur-title">✅ Банковская выписка загружена</div>
+                    <div class="ur-stats" id="bankStats"></div>
+                    <div style="margin-top:12px">
+                        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap">
+                            <div><strong>ИНН:</strong> <span id="ownerInn"></span></div>
+                            <div><strong>ФИО:</strong> <input type="text" id="ownerFio" style="border:1px solid #cbd5e1; border-radius:4px; padding:2px 6px; font-size:14px; width:300px" placeholder="ФАМИЛИЯ ИМЯ ОТЧЕСТВО"></div>
+                        </div>
+                        <div class="small" style="color:#92400e; margin-top:4px">Проверьте ФИО — при необходимости допишите отчество</div>
+                    </div>
+                </div>
+
+                <!-- OKTMO / IFNS appear only after bank is parsed -->
+                <div id="taxDetailsBlock" class="hidden">
+                    <h3 style="margin-top:20px">2. Реквизиты для декларации</h3>
+                    <div class="grid">
+                        <div class="field">
+                            <label>ОКТМО <span class="small">(заполняется вручную)</span></label>
+                            <input id="oktmo" maxlength="11" placeholder="45380000">
+                        </div>
+                        <div class="field">
+                            <label>Код ИФНС <span class="small">(заполняется вручную)</span></label>
+                            <input id="ifns_code" maxlength="4" placeholder="7718">
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top:20px">3. ОФД — чеки с ККТ <span class="small">(опционально)</span></h3>
+                    <p class="hint">
+                        Нужен только если в {{год}} были <strong>наличные продажи</strong>.
+                        Безналичные чеки ОФД игнорируются — они уже попадают в банк как эквайринг.
+                    </p>
+                    <label class="dz" id="dzOfd">
+                        <div class="dz-label" id="dzOfdLabel">🧾 Перетащите или нажмите — .xlsx</div>
+                        <div class="dz-sub">Будет учтена только наличная выручка (sale − refund)</div>
+                        <input type="file" id="ofdFile" accept=".xlsx,.xls,.csv">
+                    </label>
+                    <div class="progress" id="ofdProgress">
+                        <div class="info"><span id="ofdPct">0 %</span><span id="ofdEta">—</span></div>
+                        <div class="bar"><div class="fill" id="ofdFill"></div></div>
+                        <div class="small" id="ofdInfo"></div>
+                    </div>
+
+                    <!-- Тулбар результатов загрузки ОФД -->
+                    <div id="ofdResult" class="upload-result ok">
+                        <div class="ur-title">🧾 Чеки ОФД загружены</div>
+                        <div class="ur-stats" id="ofdStats"></div>
+                        <div class="ur-warn" id="ofdWarn"></div>
+                    </div>
+                </div>
+
+                <div id="step1Err"></div>
+
+                <div class="btn-row">
+                    <div></div>
+                    <button class="btn btn-primary" id="toStep2" disabled>
+                        Перейти к выручке →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ───────── STEP 2 ───────── -->
+        <div id="step2" class="step hidden">
+            <div class="card">
+                <h2>Шаг 2 · Выручка по кварталам</h2>
+                <p class="hint">
+                    Логика дедупликации: из <strong>банка</strong> берём всю входящую выручку
+                    (в том числе эквайринг по картам). Из <strong>ОФД</strong> берём только
+                    наличные (sale − refund). Безналичные чеки ОФД игнорируются — они уже
+                    попадают в банк как эквайринг.
+                </p>
+
+                <div id="revTableWrap"></div>
+
+                <div class="alert alert-info" id="revRec"></div>
+
+                <div class="btn-row">
+                    <button class="btn btn-ghost" onclick="goTo(1)">← Назад</button>
+                    <button class="btn btn-primary" onclick="goTo(3)">
+                        Далее: персонал и взносы →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ───────── STEP 3 ───────── -->
+        <div id="step3" class="step hidden">
+            <div class="card">
+                <h2>Шаг 3 · Персонал и страховые взносы</h2>
+                <p class="hint">
+                    Если у ИП были наёмные работники — налог УСН уменьшается на взносы
+                    не более чем на 50 %. Без работников — на 100 %.
+                </p>
+
+                <div class="field">
+                    <label>Были ли наёмные работники в {{year}} году?</label>
+                    <div class="radio-row">
+                        <label><input type="radio" name="hasEmp" value="no" checked> Нет (только ИП)</label>
+                        <label><input type="radio" name="hasEmp" value="yes"> Да</label>
+                    </div>
+                </div>
+
+                <div class="field hidden" id="empQuarterWrap">
+                    <label>С какого квартала работники были?</label>
+                    <select id="empQuarter">
+                        <option value="1">1 квартал</option>
+                        <option value="2">2 квартал</option>
+                        <option value="3">3 квартал</option>
+                        <option value="4">4 квартал</option>
+                    </select>
+                </div>
+
+                <div class="hidden" id="empPayrollWrap" style="background:#f5f5f5; border-radius:8px; padding:16px; margin:12px 0">
+                    <h3 style="margin-top:0">Данные по зарплате</h3>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap">
+                        <div class="field" style="flex:1; min-width:180px">
+                            <label>Средняя зарплата в месяц, ₽</label>
+                            <input type="number" id="avgSalary" value="50000" min="0" step="1000"
+                                   onchange="recalcContributions()" oninput="recalcContributions()">
+                        </div>
+                        <div class="field" style="flex:1; min-width:120px">
+                            <label>Количество работников</label>
+                            <input type="number" id="numEmployees" value="1" min="1" max="100" step="1"
+                                   onchange="recalcContributions()" oninput="recalcContributions()">
+                        </div>
+                    </div>
+                    <p style="color:#666; font-size:13px; margin:4px 0 0">
+                        Тариф МСП: 30% на часть зарплаты до МРОТ + 15% на часть свыше МРОТ.
+                        Взносы за работников будут рассчитаны автоматически с учётом предельной базы.
+                    </p>
+                    <div id="empContribDetail" style="margin-top:8px"></div>
+                </div>
+
+                <h3>Страховые взносы, уплаченные нарастающим итогом (₽)</h3>
+                <div class="alert alert-info" id="contribBanner">
+                    Автоматически рассчитано от годового дохода <span id="cbIncome">—</span> ₽
+                    за <span id="cbYear">—</span> год. Если ваши суммы отличаются от стандартных —
+                    просто отредактируйте значения.
+                    <button class="btn btn-ghost" style="margin-left:8px; padding:4px 10px; font-size:12px"
+                            onclick="recalcContributions()">🔄 Пересчитать</button>
+                </div>
+
+                <div class="contrib-block" id="c_q1_block">
+                    <div class="field">
+                        <label>1 квартал (к 31.03)</label>
+                        <input type="number" id="c_q1" value="0" min="0" step="0.01">
+                    </div>
+                    <div class="contrib-why" id="c_q1_why"></div>
+                </div>
+
+                <div class="contrib-block" id="c_half_block">
+                    <div class="field">
+                        <label>Полугодие (к 30.06)</label>
+                        <input type="number" id="c_half" value="0" min="0" step="0.01">
+                    </div>
+                    <div class="contrib-why" id="c_half_why"></div>
+                </div>
+
+                <div class="contrib-block" id="c_nine_block">
+                    <div class="field">
+                        <label>9 месяцев (к 30.09)</label>
+                        <input type="number" id="c_nine" value="0" min="0" step="0.01">
+                    </div>
+                    <div class="contrib-why" id="c_nine_why"></div>
+                </div>
+
+                <div class="contrib-block" id="c_year_block">
+                    <div class="field">
+                        <label>Год (к 31.12)</label>
+                        <input type="number" id="c_year" value="0" min="0" step="0.01">
+                    </div>
+                    <div class="contrib-why" id="c_year_why"></div>
+                </div>
+
+                <div style="margin-top:16px">
+                    <button class="btn btn-primary" onclick="computeTax()">
+                        Рассчитать налог
+                    </button>
+                </div>
+
+                <div id="taxTableWrap" style="margin-top:16px"></div>
+
+                <div class="btn-row">
+                    <button class="btn btn-ghost" onclick="goTo(2)">← Назад</button>
+                    <button class="btn btn-primary" id="toStep4" disabled onclick="goTo(4)">
+                        Далее: формировать НД →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ───────── STEP 4 ───────── -->
+        <div id="step4" class="step hidden">
+            <div class="card">
+                <h2>Шаг 4 · Формирование декларации</h2>
+
+                <div class="field">
+                    <label>Период декларации</label>
+                    <div class="radio-row">
+                        <label><input type="radio" name="period" value="q1"> 1 квартал (код 21)</label>
+                        <label><input type="radio" name="period" value="half_year"> Полугодие (31)</label>
+                        <label><input type="radio" name="period" value="nine_months"> 9 месяцев (33)</label>
+                        <label><input type="radio" name="period" value="year" checked> Год (34)</label>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="field">
+                        <label>Дата подачи (ДД.ММ.ГГГГ)</label>
+                        <input id="datePresented" placeholder="дд.мм.гггг">
+                    </div>
+                </div>
+
+                <div style="margin-top:16px">
+                    <button class="btn btn-green" id="genBtn" onclick="generateDecl()">
+                        🧾 Сформировать декларацию
+                    </button>
+                </div>
+
+                <div id="genResult"></div>
+
+                <div class="btn-row">
+                    <button class="btn btn-ghost" onclick="goTo(3)">← Назад</button>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ─── global state ────────────────────────────────────────────────
+const state = {
+    projectId: null,
+    bankUploaded: false,
+    ofdUploaded: false,
+    revenue: null,
+    tax: null,
+    hasEmployees: false,
+};
+
+// ─── step navigation ────────────────────────────────────────────
+function goTo(n) {
+    document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
+    document.getElementById('step' + n).classList.remove('hidden');
+    document.querySelectorAll('.chip').forEach(c => {
+        const step = parseInt(c.dataset.step);
+        c.classList.remove('active', 'done');
+        if (step < n) c.classList.add('done');
+        else if (step === n) c.classList.add('active');
+    });
+    if (n === 2) loadRevenue();
+    if (n === 3) recalcContributions();
+    window.scrollTo(0, 0);
+}
+
+// ─── Contribution auto-calculator ───────────────────────────────
+// Фиксированные страховые взносы ИП (пенсионное + мед.) по годам
+const FIXED_CONTRIBUTIONS_BY_YEAR = {
+    2021: 40874,
+    2022: 43211,
+    2023: 45842,
+    2024: 49500,
+    2025: 53658,
+    2026: 57390,
+    2027: 61154,
+};
+
+function fmtRub(n) {
+    return new Intl.NumberFormat('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(n);
+}
+
+// МРОТ и предельные базы по годам
+const MROT_BY_YEAR = {2023:16242, 2024:19242, 2025:22440, 2026:25000, 2027:27000};
+const PREDEL_BAZA_BY_YEAR = {2023:1917000, 2024:2225000, 2025:2759000, 2026:3200000};
+
+function calcEmployeeContribs(avgSalary, numEmp, year) {
+    const mrot = MROT_BY_YEAR[year] || 22440;
+    const predel = PREDEL_BAZA_BY_YEAR[year] || 2759000;
+    const nsRate = 0.002;
+    let cumBase = 0;
+    const quarterly = {q1:0, q2:0, q3:0, q4:0};
+    const qNames = ['q1','q1','q1','q2','q2','q2','q3','q3','q3','q4','q4','q4'];
+
+    for (let m = 0; m < 12; m++) {
+        const prevBase = cumBase;
+        cumBase += avgSalary;
+        const mrotPart = Math.min(avgSalary, mrot);
+        const aboveMrot = Math.max(0, avgSalary - mrot);
+        let contribMain = 0;
+
+        if (prevBase >= predel) {
+            // Всё сверх предела: МРОТ-часть 15.1%, выше-МРОТ 0%
+            contribMain = Math.round(mrotPart * 0.151 * numEmp);
+        } else if (prevBase + mrotPart > predel) {
+            // МРОТ-часть частично до предела
+            const mrotBelow = predel - prevBase;
+            const mrotAbove = mrotPart - mrotBelow;
+            contribMain = Math.round((mrotBelow * 0.30 + mrotAbove * 0.151) * numEmp);
+        } else {
+            contribMain = Math.round(mrotPart * 0.30 * numEmp);
+            const remaining = predel - prevBase - mrotPart;
+            if (aboveMrot <= remaining) {
+                contribMain += Math.round(aboveMrot * 0.15 * numEmp);
+            } else if (remaining > 0) {
+                contribMain += Math.round(remaining * 0.15 * numEmp);
+            }
+        }
+        const contribNs = Math.round(avgSalary * nsRate * numEmp);
+        quarterly[qNames[m]] += contribMain + contribNs;
+    }
+
+    return {
+        quarterly,
+        cumulative: {
+            q1: quarterly.q1,
+            half_year: quarterly.q1 + quarterly.q2,
+            nine_months: quarterly.q1 + quarterly.q2 + quarterly.q3,
+            year: quarterly.q1 + quarterly.q2 + quarterly.q3 + quarterly.q4,
+        },
+        total: quarterly.q1 + quarterly.q2 + quarterly.q3 + quarterly.q4,
+        mrot, predel,
+    };
+}
+
+function recalcContributions() {
+    const year = parseInt(document.getElementById('year').value);
+    const fixed = FIXED_CONTRIBUTIONS_BY_YEAR[year] || 53658;
+
+    let yearIncome = 0;
+    if (state.revenue && state.revenue.quarters && state.revenue.quarters.cumulative) {
+        yearIncome = parseFloat(state.revenue.quarters.cumulative.year) || 0;
+    }
+
+    const extra1pct = Math.max(0, yearIncome - 300000) * 0.01;
+    const maxExtra = fixed * 8 - fixed;
+    const extra1pctCapped = Math.min(extra1pct, maxExtra);
+
+    // ИП фикс. часть — равномерно по кварталам
+    const ipQ1   = Math.round(fixed / 4);
+    const ipHalf = Math.round(fixed / 2);
+    const ipNine = Math.round(fixed * 3 / 4);
+    const ipYear = fixed + Math.round(extra1pctCapped);
+
+    // Взносы за работников (если есть)
+    let empQ1 = 0, empHalf = 0, empNine = 0, empYear = 0;
+    let empDetail = null;
+    if (state.hasEmployees) {
+        const avgSalary = parseFloat(document.getElementById('avgSalary').value) || 0;
+        const numEmp = parseInt(document.getElementById('numEmployees').value) || 0;
+        if (avgSalary > 0 && numEmp > 0) {
+            empDetail = calcEmployeeContribs(avgSalary, numEmp, year);
+            empQ1   = empDetail.cumulative.q1;
+            empHalf = empDetail.cumulative.half_year;
+            empNine = empDetail.cumulative.nine_months;
+            empYear = empDetail.cumulative.year;
+        }
+    }
+
+    // ИТОГО нарастающим итогом
+    const totalQ1   = ipQ1   + empQ1;
+    const totalHalf = ipHalf + empHalf;
+    const totalNine = ipNine + empNine;
+    const totalYear = ipYear + empYear;
+
+    document.getElementById('c_q1').value   = totalQ1.toFixed(2);
+    document.getElementById('c_half').value = totalHalf.toFixed(2);
+    document.getElementById('c_nine').value = totalNine.toFixed(2);
+    document.getElementById('c_year').value = totalYear.toFixed(2);
+
+    // Баннер
+    document.getElementById('cbIncome').textContent = fmtRub(yearIncome);
+    document.getElementById('cbYear').textContent = year;
+
+    // Пояснения Q1
+    let q1Why = `<strong>ИП за себя:</strong> ${fmtRub(fixed)} ÷ 4 = ${fmtRub(ipQ1)} ₽`;
+    if (empQ1) q1Why += `<br><strong>За работников:</strong> ${fmtRub(empQ1)} ₽ (МСП-тариф)`;
+    if (empQ1) q1Why += `<br><strong>Итого:</strong> ${fmtRub(totalQ1)} ₽`;
+    document.getElementById('c_q1_why').innerHTML = q1Why;
+
+    // Пояснения H1
+    let halfWhy = `<strong>ИП за себя:</strong> ${fmtRub(fixed)} ÷ 2 = ${fmtRub(ipHalf)} ₽`;
+    if (empHalf) halfWhy += `<br><strong>За работников:</strong> ${fmtRub(empHalf)} ₽`;
+    if (empHalf) halfWhy += `<br><strong>Итого:</strong> ${fmtRub(totalHalf)} ₽`;
+    document.getElementById('c_half_why').innerHTML = halfWhy;
+
+    // Пояснения 9M
+    let nineWhy = `<strong>ИП за себя:</strong> ${fmtRub(fixed)} × ¾ = ${fmtRub(ipNine)} ₽`;
+    if (empNine) nineWhy += `<br><strong>За работников:</strong> ${fmtRub(empNine)} ₽`;
+    if (empNine) nineWhy += `<br><strong>Итого:</strong> ${fmtRub(totalNine)} ₽`;
+    document.getElementById('c_nine_why').innerHTML = nineWhy;
+
+    // Пояснения Year
+    let yearWhy = `<strong>ИП за себя:</strong> ${fmtRub(fixed)} ₽ (фикс.)`;
+    if (extra1pctCapped > 0) {
+        yearWhy += ` + ${fmtRub(extra1pctCapped)} ₽ (1% сверх 300к)`;
+    }
+    yearWhy += ` = ${fmtRub(ipYear)} ₽`;
+    if (empYear) {
+        yearWhy += `<br><strong>За работников:</strong> ${fmtRub(empYear)} ₽ (МСП-тариф за год)`;
+        yearWhy += `<br><strong>Итого:</strong> ${fmtRub(totalYear)} ₽`;
+    }
+    if (extra1pctCapped > 0) {
+        yearWhy += `<br><span style="color:#92400e">⚠ Если 1% уплачен после 31.12 — уберите из годовой суммы.</span>`;
+    }
+    document.getElementById('c_year_why').innerHTML = yearWhy;
+
+    // Расшифровка взносов за работников
+    const detailEl = document.getElementById('empContribDetail');
+    if (empDetail && detailEl) {
+        const mrot = empDetail.mrot;
+        const avgS = parseFloat(document.getElementById('avgSalary').value) || 0;
+        const numE = parseInt(document.getElementById('numEmployees').value) || 0;
+        const aboveMrot = Math.max(0, avgS - mrot);
+        const mrotPart = Math.min(avgS, mrot);
+        const monthContrib30 = Math.round(mrotPart * 0.30 * numE);
+        const monthContrib15 = Math.round(aboveMrot * 0.15 * numE);
+        const monthNs = Math.round(avgS * 0.002 * numE);
+        detailEl.innerHTML = `
+            <table style="font-size:13px; width:100%">
+                <tr><td>Часть до МРОТ (${fmtRub(mrot)} ₽) × 30%</td>
+                    <td style="text-align:right">${fmtRub(monthContrib30)} ₽/мес</td></tr>
+                <tr><td>Часть свыше МРОТ (${fmtRub(aboveMrot)} ₽) × 15%</td>
+                    <td style="text-align:right">${fmtRub(monthContrib15)} ₽/мес</td></tr>
+                <tr><td>НС и ПЗ (0.2%)</td>
+                    <td style="text-align:right">${fmtRub(monthNs)} ₽/мес</td></tr>
+                <tr style="font-weight:bold; border-top:1px solid #ccc">
+                    <td>Итого за работников в месяц</td>
+                    <td style="text-align:right">${fmtRub(monthContrib30 + monthContrib15 + monthNs)} ₽</td></tr>
+                <tr style="font-weight:bold">
+                    <td>Итого за год</td>
+                    <td style="text-align:right">${fmtRub(empDetail.total)} ₽</td></tr>
+            </table>
+            <p style="color:#666; font-size:12px; margin:4px 0 0">
+                Предельная база ${year}: ${fmtRub(empDetail.predel)} ₽ на работника.
+                ${empDetail.total > 0 && avgS * 12 > empDetail.predel
+                    ? 'Сверх предельной базы: 15.1% на МРОТ-часть, 0% на часть выше МРОТ.'
+                    : ''}
+            </p>`;
+    } else if (detailEl) {
+        detailEl.innerHTML = '';
+    }
+
+    // Убираем старое предупреждение
+    const oldWarn = document.getElementById('empContribWarn');
+    if (oldWarn) oldWarn.remove();
+}
+
+// Пересчёт при смене «есть ли работники»
+document.addEventListener('change', (e) => {
+    if (e.target && e.target.name === 'hasEmp') {
+        recalcContributions();
+    }
+});
+
+// ─── upload with progress ───────────────────────────────────────
+function uploadWithProgress(url, formData, prefix) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const start = Date.now();
+        const progress = document.getElementById(prefix + 'Progress');
+        const fill = document.getElementById(prefix + 'Fill');
+        const pct = document.getElementById(prefix + 'Pct');
+        const eta = document.getElementById(prefix + 'Eta');
+        const info = document.getElementById(prefix + 'Info');
+
+        progress.classList.add('visible');
+
+        xhr.upload.onprogress = (e) => {
+            if (!e.lengthComputable) return;
+            const percent = e.loaded / e.total;
+            const elapsed = (Date.now() - start) / 1000;
+            const remaining = percent > 0 ? elapsed * (1 - percent) / percent : 0;
+            fill.style.width = (percent * 100).toFixed(0) + '%';
+            pct.textContent = (percent * 100).toFixed(0) + ' %';
+            eta.textContent = 'прошло ' + elapsed.toFixed(1) + ' с · осталось ~' + remaining.toFixed(1) + ' с';
+            info.textContent = (e.loaded/1024).toFixed(0) + ' / ' + (e.total/1024).toFixed(0) + ' КБ';
+        };
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                fill.style.width = '100%';
+                pct.textContent = '100 %';
+                eta.textContent = 'готово за ' + ((Date.now() - start)/1000).toFixed(1) + ' с';
+                try { resolve(JSON.parse(xhr.responseText)); }
+                catch (e) { reject(new Error('Неверный JSON: ' + xhr.responseText.slice(0, 200))); }
+            } else {
+                // Try to extract FastAPI's detail message
+                let msg = xhr.statusText || 'HTTP ' + xhr.status;
+                try {
+                    const j = JSON.parse(xhr.responseText);
+                    if (j.detail) msg = (typeof j.detail === 'string') ? j.detail : JSON.stringify(j.detail);
+                } catch (_) {
+                    if (xhr.responseText) msg = xhr.responseText.slice(0, 300);
+                }
+                reject(new Error('HTTP ' + xhr.status + ' — ' + msg));
+            }
+        };
+        xhr.onerror = () => reject(new Error(
+            'Сервер не отвечает. Проверьте, что запущен run.py (вы должны видеть окно консоли) ' +
+            'и адрес: ' + url
+        ));
+        xhr.ontimeout = () => reject(new Error('Тайм-аут загрузки (файл слишком большой?)'));
+        xhr.timeout = 300000; // 5 минут для больших файлов ОФД
+        xhr.open('POST', url);
+        xhr.send(formData);
+    });
+}
+
+// ─── Step 1: bank-first upload, creates project and extracts owner ─
+function updateNextStep1() {
+    document.getElementById('toStep2').disabled = !state.bankUploaded;
+}
+
+function fmtPeriod(ps, pe) {
+    if (!ps && !pe) return '—';
+    return (ps || '?') + ' … ' + (pe || '?');
+}
+
+document.getElementById('bankFile').addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    clearErr('step1Err');
+    try {
+        const year = parseInt(document.getElementById('year').value);
+        const fd = new FormData();
+        fd.append('file', f);
+        const data = await uploadWithProgress(
+            '/api/wizard/bank-first?tax_period_year=' + year, fd, 'bank');
+
+        state.projectId = data.project_id;
+        state.bankUploaded = true;
+        document.getElementById('dzBank').classList.add('has-file');
+        document.getElementById('dzBankLabel').textContent = '✅ Выписка загружена: ' + f.name;
+
+        // Показываем тулбар с результатами
+        const totalOps = data.operations_saved || 0;
+        const incomeOps = data.income_operations || 0;
+        const incomeAmt = parseFloat(data.income_amount || '0');
+        const period = fmtPeriod(data.period_start, data.period_end);
+
+        document.getElementById('bankStats').innerHTML = `
+            <div class="ur-stat"><div class="val">${totalOps}</div><div class="lbl">Всего операций</div></div>
+            <div class="ur-stat"><div class="val">${incomeOps}</div><div class="lbl">Доходных</div></div>
+            <div class="ur-stat"><div class="val">${fmtRub(incomeAmt)}</div><div class="lbl">Сумма дохода, ₽</div></div>
+            <div class="ur-stat"><div class="val" style="font-size:14px">${period}</div><div class="lbl">Период</div></div>
+            <div class="ur-stat"><div class="val" style="font-size:14px">${data.account_number || '—'}</div><div class="lbl">Счёт</div></div>
+        `;
+        const bankRes = document.getElementById('bankResult');
+        bankRes.classList.add('visible');
+
+        // ФИО и ИНН
+        document.getElementById('ownerInn').textContent = data.inn;
+        const cleanFio = (data.fio || '').replace(/^(ИНДИВИДУАЛЬНЫЙ\s+ПРЕДПРИНИМАТЕЛЬ|ИП)\s+/i, '').trim();
+        document.getElementById('ownerFio').value = cleanFio;
+
+        // Reveal OKTMO/IFNS + OFD block
+        document.getElementById('taxDetailsBlock').classList.remove('hidden');
+
+        updateNextStep1();
+    } catch (err) {
+        showErr('step1Err', 'Ошибка загрузки банка: ' + err.message);
+    }
+});
+
+document.getElementById('ofdFile').addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f || !state.projectId) return;
+    clearErr('step1Err');
+    try {
+        const fd = new FormData();
+        fd.append('file', f);
+        const data = await uploadWithProgress('/api/import/ofd/' + state.projectId, fd, 'ofd');
+        state.ofdUploaded = true;
+        document.getElementById('dzOfd').classList.add('has-file');
+        document.getElementById('dzOfdLabel').textContent = '✅ ОФД загружен: ' + f.name;
+
+        // Показываем тулбар с результатами
+        const totalReceipts = data.total_receipts || 0;
+        const totalCash = parseFloat(data.total_cash || '0');
+        const totalCard = parseFloat(data.total_card || '0');
+        const totalRefundCash = parseFloat(data.total_refund_cash || '0');
+        const totalRefundCard = parseFloat(data.total_refund_card || '0');
+        const netCash = totalCash - totalRefundCash;
+        const ofdPeriod = data.period_start && data.period_end
+            ? `${data.period_start} — ${data.period_end}` : '—';
+
+        let statsHtml = `
+            <div class="ur-stat"><div class="val">${totalReceipts}</div><div class="lbl">Чеков обработано</div></div>
+            <div class="ur-stat"><div class="val">${fmtRub(totalCash)}</div><div class="lbl">Наличные (приход)</div></div>
+        `;
+        if (totalRefundCash > 0) {
+            statsHtml += `<div class="ur-stat"><div class="val" style="color:#dc2626">−${fmtRub(totalRefundCash)}</div><div class="lbl">Возвраты нал.</div></div>`;
+        }
+        statsHtml += `<div class="ur-stat"><div class="val" style="color:#059669">${fmtRub(netCash)}</div><div class="lbl">Итого наличные (в доход)</div></div>`;
+        if (totalCard > 0) {
+            statsHtml += `<div class="ur-stat"><div class="val" style="color:#9ca3af">${fmtRub(totalCard)}</div><div class="lbl">Безнал (не учитывается)</div></div>`;
+        }
+        statsHtml += `<div class="ur-stat"><div class="val" style="font-size:14px">${ofdPeriod}</div><div class="lbl">Период</div></div>`;
+
+        document.getElementById('ofdStats').innerHTML = statsHtml;
+
+        // Предупреждения
+        const warnEl = document.getElementById('ofdWarn');
+        if (data.warnings && data.warnings.length > 0) {
+            warnEl.innerHTML = '⚠ ' + data.warnings.slice(0, 5).join('<br>⚠ ');
+        } else {
+            warnEl.innerHTML = '';
+        }
+
+        const ofdRes = document.getElementById('ofdResult');
+        ofdRes.classList.remove('warn');
+        if (totalReceipts === 0) {
+            ofdRes.classList.add('warn');
+            ofdRes.classList.remove('ok');
+            document.querySelector('#ofdResult .ur-title').textContent = '⚠ Чеков не найдено';
+            showErr('step1Err', 'ОФД файл обработан, но кассовых чеков не найдено. Проверьте формат файла.');
+        } else {
+            ofdRes.classList.add('ok');
+        }
+        ofdRes.classList.add('visible');
+    } catch (err) {
+        showErr('step1Err', 'Ошибка загрузки ОФД: ' + err.message);
+    }
+});
+
+async function saveTaxDetails() {
+    if (!state.projectId) return;
+    await fetch('/api/wizard/tax-details/' + state.projectId, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            oktmo: document.getElementById('oktmo').value.trim() || null,
+            ifns_code: document.getElementById('ifns_code').value.trim() || null,
+            tax_period_year: parseInt(document.getElementById('year').value),
+        }),
+    });
+}
+
+['oktmo', 'ifns_code'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('blur', saveTaxDetails);
+});
+
+// При смене года — обновить проект в БД и пересчитать взносы
+document.getElementById('year').addEventListener('change', async () => {
+    if (state.projectId) {
+        await saveTaxDetails();
+    }
+    recalcContributions();
+});
+
+document.getElementById('toStep2').addEventListener('click', async () => {
+    await saveTaxDetails();
+    goTo(2);
+});
+
+// ─── Step 2: revenue summary ────────────────────────────────────
+async function loadRevenue() {
+    const wrap = document.getElementById('revTableWrap');
+    wrap.innerHTML = '<p class="hint">Загрузка…</p>';
+    try {
+        const r = await fetch('/api/wizard/summary/' + state.projectId);
+        if (!r.ok) throw new Error(await r.text());
+        const data = await r.json();
+        state.revenue = data;
+        renderRevenue(data);
+    } catch (err) {
+        wrap.innerHTML = '<div class="alert alert-err">Ошибка: ' + err.message + '</div>';
+    }
+}
+
+function fmt(n) {
+    return new Intl.NumberFormat('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(n);
+}
+
+function renderRevenue(data) {
+    const q = data.quarters;
+    const html = `
+    <h3>По кварталам</h3>
+    <table>
+        <thead><tr><th>Источник</th><th>1 кв</th><th>2 кв</th><th>3 кв</th><th>4 кв</th><th>Итого</th></tr></thead>
+        <tbody>
+            <tr><td>Банк (все поступления)</td>
+                <td>${fmt(q.bank.q1)}</td><td>${fmt(q.bank.q2)}</td>
+                <td>${fmt(q.bank.q3)}</td><td>${fmt(q.bank.q4)}</td>
+                <td>${fmt(q.bank.total)}</td></tr>
+            <tr><td>ОФД (только наличные)</td>
+                <td>${fmt(q.ofd_cash.q1)}</td><td>${fmt(q.ofd_cash.q2)}</td>
+                <td>${fmt(q.ofd_cash.q3)}</td><td>${fmt(q.ofd_cash.q4)}</td>
+                <td>${fmt(q.ofd_cash.total)}</td></tr>
+        </tbody>
+        <tfoot>
+            <tr><td>Итого доход</td>
+                <td>${fmt(q.total.q1)}</td><td>${fmt(q.total.q2)}</td>
+                <td>${fmt(q.total.q3)}</td><td>${fmt(q.total.q4)}</td>
+                <td>${fmt(q.total.total)}</td></tr>
+        </tfoot>
+    </table>
+    <h3>Нарастающим итогом (для декларации)</h3>
+    <table>
+        <thead><tr><th>Период</th><th>Доход, ₽</th></tr></thead>
+        <tbody>
+            <tr><td>1 квартал</td><td>${fmt(q.cumulative.q1)}</td></tr>
+            <tr><td>Полугодие</td><td>${fmt(q.cumulative.half_year)}</td></tr>
+            <tr><td>9 месяцев</td><td>${fmt(q.cumulative.nine_months)}</td></tr>
+            <tr><td>Год</td><td>${fmt(q.cumulative.year)}</td></tr>
+        </tbody>
+    </table>`;
+    document.getElementById('revTableWrap').innerHTML = html;
+    document.getElementById('revRec').textContent = data.recommendation;
+}
+
+// ─── Step 3: personnel & tax ────────────────────────────────────
+document.querySelectorAll('input[name=hasEmp]').forEach(r => {
+    r.addEventListener('change', (e) => {
+        state.hasEmployees = (e.target.value === 'yes');
+        document.getElementById('empQuarterWrap').classList.toggle('hidden', !state.hasEmployees);
+        document.getElementById('empPayrollWrap').classList.toggle('hidden', !state.hasEmployees);
+        recalcContributions();
+    });
+});
+
+async function computeTax() {
+    const body = {
+        has_employees: state.hasEmployees,
+        employee_start_quarter: state.hasEmployees
+            ? parseInt(document.getElementById('empQuarter').value) : null,
+        contributions_q1: parseFloat(document.getElementById('c_q1').value) || 0,
+        contributions_half_year: parseFloat(document.getElementById('c_half').value) || 0,
+        contributions_nine_months: parseFloat(document.getElementById('c_nine').value) || 0,
+        contributions_year: parseFloat(document.getElementById('c_year').value) || 0,
+    };
+    try {
+        const r = await fetch('/api/wizard/personnel/' + state.projectId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body),
+        });
+        if (!r.ok) throw new Error(await r.text());
+        const data = await r.json();
+        state.tax = data;
+        renderTaxTable(data);
+        document.getElementById('toStep4').disabled = false;
+    } catch (err) {
+        document.getElementById('taxTableWrap').innerHTML =
+            '<div class="alert alert-err">Ошибка: ' + err.message + '</div>';
+    }
+}
+
+function renderTaxTable(data) {
+    const t = data.tax;
+    const labels = {q1: '1 кв', half_year: 'полугодие', nine_months: '9 мес', year: 'год'};
+    const rows = Object.keys(labels).map(k => `
+        <tr>
+            <td>${labels[k]}</td>
+            <td>${fmt(t[k].income)}</td>
+            <td>${fmt(t[k].tax)}</td>
+            <td>${fmt(t[k].reduction)}</td>
+            <td><strong>${fmt(t[k].payable)}</strong></td>
+        </tr>`).join('');
+    document.getElementById('taxTableWrap').innerHTML = `
+        <div class="alert alert-ok">
+            Ставка ${data.rate} % · лимит уменьшения ${data.reduction_limit_pct} %
+            (${data.has_employees ? 'с работниками' : 'без работников'})
+        </div>
+        <table>
+            <thead><tr><th>Период</th><th>Доход</th><th>Налог</th><th>Вычет</th><th>К уплате</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+}
+
+// ─── Step 4: generate declaration ───────────────────────────────
+async function generateDecl() {
+    const period = document.querySelector('input[name=period]:checked').value;
+    const datePres = document.getElementById('datePresented').value.trim();
+    const hasEmp = document.querySelector('input[name=hasEmp]:checked')?.value === 'yes';
+    const body = {
+        period,
+        contributions_q1:         parseFloat(document.getElementById('c_q1').value) || 0,
+        contributions_half_year:  parseFloat(document.getElementById('c_half').value) || 0,
+        contributions_nine_months:parseFloat(document.getElementById('c_nine').value) || 0,
+        contributions_year:       parseFloat(document.getElementById('c_year').value) || 0,
+        date_presented: datePres || null,
+        has_employees: hasEmp,
+        avg_salary: hasEmp ? (parseFloat(document.getElementById('avgSalary').value) || 0) : 0,
+        num_employees: hasEmp ? (parseInt(document.getElementById('numEmployees').value) || 0) : 0,
+        fio: document.getElementById('ownerFio').value.trim() || null,
+    };
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    btn.textContent = 'Формирование...';
+    document.getElementById('genResult').innerHTML = '';
+    try {
+        const r = await fetch('/api/wizard/declaration/' + state.projectId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body),
+        });
+        if (!r.ok) throw new Error(await r.text());
+        const data = await r.json();
+        const s11 = data.section_1_1;
+        const expl = data.explanation || [];
+        const adv = data.advances_explanation || [];
+        const ce = data.contributions_explanation || {};
+        const pdfBlock = data.pdf_url
+            ? `<a class="dl-pdf" href="${data.pdf_url}" target="_blank">📄 Скачать PDF</a>`
+            : `<div class="alert alert-warn" style="flex:1">
+                   ⚠ PDF не сгенерирован. XLSX доступен ниже — можно открыть в Excel
+                   и сохранить как PDF. Причина: ${data.pdf_error || 'неизвестна'}
+               </div>`;
+
+        // Предупреждения по реквизитам
+        const declWarnings = (data.warnings || []).map(w =>
+            `<div class="alert alert-warn" style="margin-bottom:6px">⚠ ${w}</div>`
+        ).join('');
+
+        // Расшифровка Раздел 2.1.1 (налог и вычет по периодам)
+        const explRows = expl.map(e => {
+            const limited = e.reduction_limited
+                ? `<br><small style="color:#c62828">Вычет ограничен: взносов ${fmt(e.contributions_paid)}, но не более налога</small>`
+                : '';
+            return `<tr>
+                <td>${e.label}</td>
+                <td style="text-align:right">${fmt(e.income)}</td>
+                <td style="text-align:right">${fmt(e.tax_computed)}</td>
+                <td style="text-align:right">${fmt(e.contributions_paid)}</td>
+                <td style="text-align:right">${fmt(e.reduction_applied)}${limited}</td>
+                <td style="text-align:right"><strong>${fmt(e.payable_cumulative)}</strong></td>
+            </tr>`;
+        }).join('');
+
+        // Расшифровка Раздел 1.1 (авансы)
+        const advRows = adv.map(a => {
+            const formula = a.prev_payable
+                ? `${fmt(a.payable_cumulative)} − ${fmt(a.prev_payable)} = ${a.diff >= 0 ? '+' : ''}${fmt(a.diff)}`
+                : `${fmt(a.payable_cumulative)}`;
+            const result = a.to_pay
+                ? `<span style="color:#2e7d32">↑ к уплате ${fmt(a.to_pay)}</span> (стр. ${a.line_pay})`
+                : a.to_reduce
+                    ? `<span style="color:#c62828">↓ к уменьшению ${fmt(a.to_reduce)}</span> (стр. ${a.line_reduce})`
+                    : `<span style="color:#777">0</span>`;
+            return `<tr>
+                <td>${a.label}</td>
+                <td style="text-align:right">${formula}</td>
+                <td>${result}</td>
+            </tr>`;
+        }).join('');
+
+        // Расшифровка взносов
+        const contrBlock = ce.fixed_annual ? `
+            <h3>Страховые взносы по ст. 430 НК РФ</h3>
+            <table>
+                <tbody>
+                    <tr><td>Фиксированная часть (стр. 150)</td><td style="text-align:right">${fmt(ce.fixed_annual)}</td></tr>
+                    <tr><td>1% с доходов свыше 300 000 ₽ (стр. 160)</td><td style="text-align:right">${fmt(ce.extra_1pct)}</td></tr>
+                    <tr><td><strong>Итого взносов</strong></td><td style="text-align:right"><strong>${fmt(ce.total_430)}</strong></td></tr>
+                </tbody>
+            </table>
+            <p style="color:#666;font-size:13px">
+                Доход за год: ${fmt(ce.year_income)} ₽.
+                ${ce.extra_1pct > 0
+                    ? `1% = (${fmt(ce.year_income)} − 300 000) × 1% = ${fmt(ce.extra_1pct)} ₽`
+                    : 'Доход ≤ 300 000 ₽ — доплата 1% не требуется'}
+            </p>
+        ` : '';
+
+        document.getElementById('genResult').innerHTML = `
+            <div class="alert alert-ok" style="margin-top:16px">
+                ✅ Декларация сформирована
+            </div>
+
+            <h3>Раздел 2.1.1 — Расчёт налога</h3>
+            <table>
+                <thead><tr>
+                    <th>Период</th><th>Доход (нараст.)</th><th>Налог 6%</th>
+                    <th>Взносы уплач.</th><th>Вычет</th><th>К уплате (нараст.)</th>
+                </tr></thead>
+                <tbody>${explRows}</tbody>
+            </table>
+
+            <h3>Раздел 1.1 — Авансовые платежи</h3>
+            <p style="color:#666;font-size:13px">
+                Каждый аванс = разница накопленного «к уплате» текущего и предыдущего периода.
+                Если разница отрицательная — значит переплата (к уменьшению).
+            </p>
+            <table>
+                <thead><tr><th>Период</th><th>Расчёт</th><th>Результат</th></tr></thead>
+                <tbody>${advRows}</tbody>
+            </table>
+
+            ${contrBlock}
+
+            ${declWarnings}
+
+            <div class="downloads" style="margin-top:16px">
+                ${pdfBlock}
+                <a class="dl-xls" href="${data.xlsx_url}" target="_blank">📊 Скачать XLSX</a>
+            </div>
+        `;
+    } catch (err) {
+        document.getElementById('genResult').innerHTML =
+            '<div class="alert alert-err">Ошибка: ' + err.message + '</div>';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🧾 Сформировать декларацию';
+    }
+}
+
+// ─── error helpers ──────────────────────────────────────────────
+function showErr(id, msg) {
+    document.getElementById(id).innerHTML = '<div class="alert alert-err">' + msg + '</div>';
+}
+function clearErr(id) {
+    document.getElementById(id).innerHTML = '';
+}
+
+// init
+updateNextStep1();
+</script>
+</body>
+</html>

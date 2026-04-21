@@ -1,0 +1,1088 @@
+/* ===========================
+   RESET & BASE STYLES
+   =========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2E75B6;
+    --secondary-color: #F5F7FA;
+    --sidebar-bg: #1E293B;
+    --sidebar-text: #E2E8F0;
+    --sidebar-hover: #334155;
+    --border-color: #E2E8F0;
+    --danger-color: #EF4444;
+    --success-color: #10B981;
+    --warning-color: #F59E0B;
+    --gray-text: #64748B;
+    --text-color: #1E293B;
+    --text-secondary: #475569;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+.header {
+    background-color: var(--sidebar-bg);
+    color: white;
+    padding: 16px 32px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.header-content h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+/* ===========================
+   PROGRESS BAR
+   =========================== */
+.progress-bar {
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 32px;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    min-width: 140px;
+    cursor: pointer;
+    max-width: 140px;
+    margin: 0 auto;
+}
+
+.step-number {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    background-color: var(--border-color);
+    color: var(--gray-text);
+    font-weight: bold;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-label {
+    font-size: 13px;
+    color: var(--gray-text);
+}
+
+.progress-step.active .step-number {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.progress-step.active .step-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.progress-step.completed .step-number {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.progress-step.completed .step-number::before {
+    content: "✓";
+}
+
+.progress-step.completed .step-label {
+    color: var(--success-color);
+}
+
+.progress-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background-color: var(--border-color);
+}
+
+.progress-step.completed:not(:last-child)::after {
+    background-color: var(--success-color);
+}
+
+/* ===========================
+   WIZARD CONTAINER
+   =========================== */
+.wizard-container {
+    max-width: 960px;
+    margin: 32px auto;
+    padding: 0 24px;
+}
+
+.wizard-step {
+    display: none;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+.step-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+}
+
+.step-content h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.step-subtitle {
+    color: var(--gray-text);
+    margin-bottom: 32px;
+    font-size: 15px;
+}
+
+/* ===========================
+   DROP ZONE
+   =========================== */
+.drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 48px;
+    text-align: center;
+    background-color: #FAFBFC;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+    border-color: var(--primary-color);
+    background-color: #EFF6FF;
+}
+
+.drop-zone-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.drop-zone-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.drop-zone-hint {
+    color: var(--gray-text);
+    margin-bottom: 16px;
+}
+
+/* ===========================
+   SUMMARY CARDS
+   =========================== */
+.summary-card {
+    background-color: #F8FAFC;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.summary-card h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.summary-label {
+    color: var(--gray-text);
+}
+
+.summary-value {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.summary-item-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.summary-item-label {
+    font-size: 13px;
+    color: var(--gray-text);
+    margin-bottom: 8px;
+}
+
+.summary-item-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
+.btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #245d94;
+}
+
+.btn-secondary {
+    background-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+    background-color: #CBD5E1;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #059669;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #DC2626;
+}
+
+.btn-lg {
+    padding: 14px 36px;
+    font-size: 16px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: center;
+}
+
+/* ===========================
+   WIZARD NAVIGATION
+   =========================== */
+.wizard-nav {
+    max-width: 960px;
+    margin: 24px auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ===========================
+   FILTER BAR
+   =========================== */
+.filter-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-text);
+    margin-bottom: 4px;
+}
+
+/* ===========================
+   FORM INPUTS
+   =========================== */
+.form-input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%;
+    background-color: white;
+    color: var(--text-color);
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 117, 182, 0.15);
+}
+
+select.form-input {
+    appearance: auto;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-text);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* ===========================
+   TABLES
+   =========================== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table th {
+    background-color: #F8FAFC;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.table tbody tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.table input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.table th:first-child,
+.table td:first-child {
+    width: 40px;
+}
+
+.calc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.calc-table th {
+    background-color: #F8FAFC;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.calc-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.calc-table tbody tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.calc-table .amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.calc-table tbody tr:last-child {
+    font-weight: bold;
+    border-top: 2px solid var(--border-color);
+}
+
+/* ===========================
+   BADGES
+   =========================== */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-income {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.badge-not-income {
+    background-color: #F1F5F9;
+    color: var(--gray-text);
+}
+
+.badge-disputed {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+/* ===========================
+   ALERTS
+   =========================== */
+.alert {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-warning {
+    background-color: #FEF3C7;
+    border: 1px solid #FDE68A;
+    color: #92400E;
+}
+
+.alert-success {
+    background-color: #D1FAE5;
+    border: 1px solid #A7F3D0;
+    color: #065F46;
+}
+
+.alert-danger {
+    background-color: #FEE2E2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+}
+
+.alert-info {
+    background-color: #DBEAFE;
+    border: 1px solid #BFDBFE;
+    color: #1E40AF;
+}
+
+/* ===========================
+   SETTINGS CARDS
+   =========================== */
+.settings-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.settings-card h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: var(--text-color);
+}
+
+/* ===========================
+   TOGGLE
+   =========================== */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toggle {
+    width: 48px;
+    height: 26px;
+    background-color: var(--border-color);
+    border-radius: 13px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+    border: none;
+    padding: 0;
+}
+
+.toggle.active {
+    background-color: var(--primary-color);
+}
+
+.toggle::after {
+    content: "";
+    width: 22px;
+    height: 22px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left 0.2s ease;
+}
+
+.toggle.active::after {
+    left: 24px;
+}
+
+/* ===========================
+   TABS
+   =========================== */
+.tab-selector {
+    display: flex;
+    background-color: #F1F5F9;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    background-color: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background-color: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    color: var(--primary-color);
+}
+
+/* ===========================
+   DECLARATION CARDS
+   =========================== */
+.declaration-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.declaration-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.declaration-card h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.declaration-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.declaration-line-label {
+    color: var(--gray-text);
+    font-size: 14px;
+}
+
+.declaration-line-value {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* ===========================
+   EXPORT BUTTONS
+   =========================== */
+.export-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+/* ===========================
+   MODALS
+   =========================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal h3 {
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+/* ===========================
+   TOAST NOTIFICATIONS
+   =========================== */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+}
+
+.toast {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease;
+}
+
+.toast-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.toast-error {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.toast-warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+/* ===========================
+   LOADING OVERLAY
+   =========================== */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* ===========================
+   PAGINATION
+   =========================== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.page-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.page-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* ===========================
+   BATCH BAR
+   =========================== */
+.batch-bar {
+    background-color: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 12px 20px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.batch-bar.active {
+    display: flex;
+}
+
+.batch-bar span {
+    color: #1E40AF;
+    font-weight: 500;
+}
+
+/* ===========================
+   WIZARD FOOTER
+   =========================== */
+.wizard-footer {
+    max-width: 960px;
+    margin: 24px auto;
+    padding: 0 24px 40px;
+}
+
+.wizard-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ===========================
+   OPERATIONS TABLE
+   =========================== */
+.operations-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.operations-table th {
+    background-color: #F8FAFC;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+    font-size: 13px;
+}
+
+.operations-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #F1F5F9;
+    font-size: 13px;
+}
+
+.operations-table tbody tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.operations-table input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+/* ===========================
+   BATCH ACTIONS
+   =========================== */
+.batch-actions {
+    background-color: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 12px 20px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.batch-actions span {
+    color: #1E40AF;
+    font-weight: 500;
+}
+
+.batch-actions-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* ===========================
+   TOGGLE GROUP (CHECKBOX)
+   =========================== */
+.toggle-group {
+    margin-bottom: 12px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.toggle-text {
+    font-weight: 500;
+}
+
+/* ===========================
+   RADIO GROUP
+   =========================== */
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* ===========================
+   INFO BOX
+   =========================== */
+.info-box {
+    background-color: #DBEAFE;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #1E40AF;
+}
+
+/* ===========================
+   DECLARATION LAYOUT
+   =========================== */
+.declaration-success-message {
+    background-color: #D1FAE5;
+    border: 1px solid #A7F3D0;
+    color: #065F46;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.declaration-cards-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .declaration-cards-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.summary-item-card.highlight {
+    background-color: #EFF6FF;
+    border-color: var(--primary-color);
+}
+
+.summary-item-card.highlight .summary-item-value {
+    color: var(--primary-color);
+}
+
+.btn-large {
+    padding: 16px 48px;
+    font-size: 18px;
+}
+
+/* ===========================
+   MODAL FIX (as overlay)
+   =========================== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--gray-text);
+}
+
+.modal-close:hover {
+    color: var(--text-color);
+}
+
+/* ===========================
+   ANIMATIONS
+   =========================== */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .declaration-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-step .step-label {
+        font-size: 11px;
+    }
+
+    .step-content {
+        padding: 24px;
+    }
+
+    .progress-steps {
+        gap: 4px;
+    }
+
+    .progress-step {
+        min-width: 120px;
+        max-width: 120px;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+    }
+
+    .progress-step:not(:last-child)::after {
+        display: none;
+    }
+}

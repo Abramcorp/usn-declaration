@@ -1,0 +1,15 @@
+# Совместимость с Python 3.10 - 3.14
+# Основные зависимости (обязательные)
+fastapi>=0.115.6
+uvicorn>=0.34.0
+sqlalchemy>=2.0.40
+python-multipart>=0.0.18
+openpyxl>=3.1.5
+aiofiles>=24.1.0
+pydantic>=2.11.0
+xlrd>=2.0.1
+
+# Опциональные (для старого PDF-генератора; основной путь — XLSX + LibreOffice)
+# Если reportlab не ставится на вашей версии Python — удалите эту строку.
+# Мастер деклараций (wizard) будет работать без reportlab.
+reportlab>=4.2.5
