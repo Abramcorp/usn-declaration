@@ -1,42 +1,27 @@
 @echo off
-chcp 65001 >nul
-echo === Загрузка проекта на GitHub ===
+title Push to GitHub
+echo.
+echo ========================================
+echo   Push project to GitHub + Render
+echo ========================================
 echo.
 
 cd /d "%~dp0"
 
-:: Инициализируем git (если ещё нет)
-if not exist ".git" (
-    git init
-    git branch -M main
-)
-
-:: Настраиваем remote
-git remote remove origin 2>nul
-git remote add origin https://github.com/Abramcorp/usn-declaration.git
-
-:: Создаём .gitignore если нет
-if not exist ".gitignore" (
-    echo __pycache__/> .gitignore
-    echo *.pyc>> .gitignore
-    echo *.db>> .gitignore
-    echo .env>> .gitignore
-    echo Include/>> .gitignore
-    echo Lib/>> .gitignore
-    echo Scripts/>> .gitignore
-    echo *.tar.gz>> .gitignore
-    echo data/declarations/>> .gitignore
-    echo data/uploads/>> .gitignore
-    echo app/uploads/>> .gitignore
-)
-
-:: Добавляем все файлы и коммитим
 git add -A
-git commit -m "Full project: USN 6%% tax declaration wizard"
+git status --short
+echo.
 
-:: Пушим (force чтобы перезаписать README)
-git push -u origin main --force
+set /p COMMIT_MSG="Commit message (Enter = update): "
+if "%COMMIT_MSG%"=="" set COMMIT_MSG=Update project
+
+git commit -m "%COMMIT_MSG%"
+git push -u origin main
 
 echo.
-echo === Готово! Проверьте: https://github.com/Abramcorp/usn-declaration ===
+echo ========================================
+echo   Done! Render will update in 2-3 min.
+echo   https://usn-declaration.onrender.com
+echo ========================================
+echo.
 pause
